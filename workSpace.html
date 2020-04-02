@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+<!--    <link rel="stylesheet" href="./layui/css/index.css">-->
+    <style>
+        .img_div{
+            padding: 20px;
+        }
+        .layui-card{
+            width: 100%;
+            height: 120px;
+        }
+        .layui-card img{
+            width: 100%;
+            height: 100%;
+        }
+        .dir_div{
+            padding: 20px;
+        }
+
+        .dir_div div img{
+            height: 50px;
+            width: 50px;
+            /*clear: both;*/
+            /*display: block;*/
+            /*margin: auto;*/
+            /*position: absolute;*/
+            margin-left: 50px;
+            margin-top: 35px;
+        }
+        .more{
+            width: 100px;
+            margin: 0 auto;
+            /*float: left;*/
+            clear: left;
+            padding-top: 100px;
+            padding-bottom: 50px;
+        }
+
+        .select_img{
+            padding-top: 10px;
+            padding-left: 20px;
+        }
+        .select_img div img{
+            height: 120px;
+            width: 100%;
+        }
+        .left img{
+            width: 30px;
+            height: 30px;
+            margin-top: 55px;
+        }
+        .right img{
+            width: 30px;
+            height: 30px;
+            margin-top: 55px;
+            padding-left: 20px;
+        }
+
+        .dir_select{
+            width: 50px;
+            height: 50px;
+        }
+        .dir_select_div{
+            margin-top: 30px;
+        }
+        .add_div{
+            margin-top: 100px;
+        }
+        .add_div input{
+
+        }
+        .add_div button{
+            float: left;
+        }
+        .submit_div{
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layui-container">
+        <div class="layui-col-md12 info_list" id="info_list">
+
+        </div>
+    </div>
+
+</body>
+
+<script src="layui/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script src="layui/auth.js"></script>
+
+<script>
+    let basicURL    = getBasicUrl();
+    let token       = getToken();
+
+    $(document).ready(() => {
+        // 列表信息
+        getUserImg(0);
+    });
+
+    function getUserImg( dir_id ) {
+        $.get(basicURL + `/workspace/getWorkspace?token=${token}&dir_id=${dir_id}`, function(data) {
+                // let res = JSON.parse(data);
+                let res = {};
+                if (typeof data === 'string') {
+                    res = JSON.parse(data);
+                } else {
+                    res = data
+                }
+                getData = res['data'] != null ? res['data'] : null;
+                if (getData != null) {
+
+                    list = getData['list'];
+
+                    dirList = list['dir'];
+                    imgList = list['img'];
+
+                    $("#info_list").empty();
+                    dirList.forEach((item) => {
+
+                        $("#info_list").append(
+                            "           <div class='layui-col-md2 dir_div'>"+
+                            "                <div class='layui-card' onclick='getUserImg("+item['id']+")'>" +
+                            "                    <img src='./resouce/dir.png' alt=''>" +
+                            "                </div>" +
+                            "                <div>" +
+                            "                    <a class='layui-icon layui-icon-delete' style='float: right' value='"+item['id']+"' onclick='deleteDir(this)'></a>" +
+                            "                </div>" +
+                            "            </div>"
+                            );
+
+                    });
+
+                    imgList.forEach((item) => {
+
+
+
+                        $("#info_list").append(
+                            "       <div class='layui-col-md2 img_div'>" +
+                            "                <div class='layui-card'>" +
+                            "                    <img src='"+item['url']+"' alt=''>" +
+                            "                </div>" +
+                            "                <div>" +
+                            "                    <span class='layui-badge layui-bg-orange'>橙</span>"+
+                            "                    <a class='layui-icon layui-icon-delete' style='float: right' value='"+item['img_key']+"' onclick='deleteImg(this)'></a>" +
+                            "                </div>"+
+                            "        </div>"
+                        );
+
+                    });
+
+                }
+
+            });
+    }
+
+    function deleteDir(e) {
+        dirId = $(e).attr('value');
+        let data = {};
+        data['token']   = token;
+        data['dir_id']  = dirId;
+        console.log(data)
+        $.post(basicURL + `/upload/deleteDir`, data, function(data) {
+
+            if(typeof data === 'string'){
+                res = JSON.parse(data);
+            }else{
+                res = data
+            }
+            if(res.code === 10000){
+                alert('删除成功');
+            }else {
+                alert(res.msg);
+            }
+
+        });
+        getUserImg(0);
+    }
+
+    function deleteImg(e) {
+        imgKey = $(e).attr('value');
+        let data = {};
+        data['token']       = token;
+        data['img_key']     = imgKey;
+        $.post(basicURL + `/upload/deleteImg`, data, function(data) {
+
+            if(typeof data === 'string'){
+                res = JSON.parse(data);
+            }else{
+                res = data
+            }
+            if(res.code === '10000'){
+                alert('删除成功');
+            }else {
+                alert(res.msg);
+            }
+        });
+        getUserImg(0);
+    }
+
+
+//    上传文件框
+    layui.use('layer', function () {
+        var layer = layui.layer;
+
+        layer.open({
+            icon: 5,
+            area: ['400px', '400px'],
+            type: 1,
+            title: '',
+            closeBtn: 1,
+            shade: 0.5,
+            shadeClose: 1,
+            anim: 5,
+            isOutAnim: true,
+            resize: false,
+            content: $('#change_password_window'), //这里content是一个普通的String
+
+        });
+
+    });
+
+</script>
+
+<div class="" id="change_password_window">
+    <div class="layui-row">
+
+        <div class="layui-col-md12">
+
+            <div class='layui-col-md1 left'>
+                <img src="./resouce/left.png">
+            </div>
+
+            <div class='layui-col-md3 select_img'>
+                <div class='layui-card'>
+                    <img src='微信图片_20200131140138.jpg' alt=''>
+                </div>
+            </div>
+            <div class='layui-col-md3 select_img'>
+                <div class='layui-card'>
+                    <img src='微信图片_20200131140138.jpg' alt=''>
+                </div>
+            </div>
+            <div class='layui-col-md3 select_img'>
+                <div class='layui-card'>
+                    <img src='微信图片_20200131140138.jpg' alt=''>
+                </div>
+            </div>
+            <div class='layui-col-md1 right'>
+                <img src="./resouce/right.png">
+            </div>
+        </div>
+
+        <div class="layui-col-md12 dir_select_div">
+            <button class="layui-col-md-offset2 layui-btn layui-btn-xs layui-bg-orange">相册位置</button>
+        </div>
+
+        <div class="layui-col-md12 add_div">
+            <input type="file" class="layui-col-md-offset2 layui-btn-xs upload_img" id="upload_img" value="111" style="opacity: 0">
+            <button class="layui-btn layui-btn-xs layui-bg-orange"><i class="layui-icon">&#xe67c;</i>添加文件</button>
+        </div>
+
+        <div class="layui-col-md12 submit_div">
+            <button class="layui-col-md4 layui-col-md-offset4 layui-btn layui-btn-radius layui-btn-normal">确认</button>
+        </div>
+    </div>
+</div>
+
+</html>

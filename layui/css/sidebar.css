@@ -1,0 +1,8 @@
+.sidebar_text{
+    float: left;
+    width: 200px;
+}
+.sidebar_text li{
+    display: block;
+    font-size: large;
+}

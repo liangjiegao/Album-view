@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <style>
+
+        .layui-tab-title li{
+            display: block;
+        }
+        .layui-tab-title{
+            float: left;
+            width: 200px;
+        }
+        .sidebar_text li{
+            font-size: large;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="" id="sidebar">
+    <div class="layui-row">
+
+        <div class="layui-col-md8 layui-col-md-offset2">
+
+
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title sidebar_text">
+                    <li class="layui-this">首页</li>
+                    <li>我的相册</li>
+                    <li>社区动态</li>
+                    <li>个人信息</li>
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script src="layui/jquery.js"></script>
+<script src="layui/layui.js"></script>
+
+<script>
+    layui.use('element', function(){
+        var element = layui.element;
+
+        //…
+    });
+
+    layui.use('layer', function () {
+        var layer = layui.layer;
+
+        layer.open({
+            icon: 5,
+            area: ['300px', '600px'],
+            type: 1,
+            title: '',
+            offset: 'rt',
+            closeBtn: 0,
+            shade: 0.5,
+            shadeClose: 1,
+            anim: 0,
+            isOutAnim: true,
+            resize: false,
+            content: $('#sidebar'), //这里content是一个普通的String
+            success: function (layero, index) {
+                console.log(layero, index);
+                console.log("帅");
+            },
+            yes: function (index, layero) {
+                //do something
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
+            }
+        })
+    });
+</script>
+
+</html>

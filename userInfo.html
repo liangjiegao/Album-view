@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+
+    <style>
+        .layui-container    {
+            padding-top: 80px;
+        }
+        .head{
+            width: 112px;
+            height: 112px;
+        }
+        .head_div div{
+            width: 112px;
+            margin: 0 auto;
+        }
+        .upload_head{
+            margin-top: 20px;
+        }
+        .change_password_btn{
+            float: right;
+            margin-top: 50px;
+        }
+        .edit_btn{
+            float: right;
+        }
+        .nickname_title{
+            font-size: x-large;
+        }
+        .nickname{
+            font-size: large;
+        }
+        .email_title{
+            font-size: large;
+        }
+        .email{
+            font-size: medium;
+        }
+        .email_div{
+            margin-top: 10px;
+        }
+        .phone_title{
+            font-size: large;
+        }
+        .phone{
+            font-size: medium;
+        }
+        .phone_div{
+            margin-top: 10px;
+        }
+        .birthday_title{
+            font-size: large;
+        }
+        .birthday{
+            font-size: medium;
+        }
+        .birthday_div{
+            margin-top: 10px;
+        }
+        .remark_title{
+            font-size: medium;
+        }
+
+
+        .c_p_form{
+            margin-top: 40px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="layui-container">
+
+    <div class="layui-col-md12">
+        <div class="layui-col-md2 head_div">
+            <div>
+                <img src="" class="head" id="head">
+            </div>
+            <div>
+                <button type="button" class="layui-btn  upload_head" id="upload_head">
+                    <i class="layui-icon">&#xe67c;</i>重新上传
+                </button>
+
+            </div>
+        </div>
+        <div class="layui-col-md4">
+
+            <div class="nickname_div">
+                <span class="nickname_title">昵称：</span>
+                <span class="nickname" id="nickname" ></span>
+                <input class="nickname_input layui-input-inline" id="nickname_input" value="">
+
+                <button type="button" class="layui-btn layui-btn-xs layui-btn-primary edit_btn" id="edit_btn" onclick="editClick()">编辑</button>
+                <button type="submit" class="layui-btn layui-btn-xs layui-btn-primary edit_btn" id="save_btn">保存</button>
+            </div>
+            <div class="email_div">
+                <span class="email_title">邮箱：</span>
+                <span class="email" id="email">1445808283@qq.com</span>
+                <input class="email_input layui-input-inline" id="email_input" value="">
+
+            </div>
+            <div class="phone_div">
+                <span class="phone_title">电话：</span>
+                <span class="phone" id="phone">15521168615</span>
+                <input class="phone_input layui-input-inline" id="phone_input" value="">
+
+            </div>
+            <div class="birthday_div">
+                <span class="birthday_title">生日：</span>
+                <span class="birthday" id="birthday">2020-02-02</span>
+                <input class="birthday_input layui-input-inline" id="birthday_input" value="">
+
+            </div>
+        </div>
+    </div>
+    <div class="layui-col-md12">
+        <div class="layui-col-md4 layui-col-md-offset2 remark_div">
+            <label class="remark_title">备注：</label>
+            <span id="remark"></span>
+            <input class="remark_input layui-input-inline" id="remark_input" value="">
+
+        </div>
+    </div>
+    <div class="layui-col-md12">
+        <div class="layui-col-md6">
+            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary change_password_btn" onclick="ejectChangePasswordWindow()">修改密码</button>
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+<script src="layui/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script src="layui/auth.js"></script>
+
+<script>
+    var token = getToken();
+    let basicURL = getBasicUrl();
+
+    $(document).ready(() => {
+       // 加载用户信息
+        getUserInfo();
+        initFormBtn();
+
+        $('#nickname_input').hide();
+        $('#phone_input').hide();
+        $('#email_input').hide();
+        $('#birthday_input').hide();
+        $('#remark_input').hide();
+        $('#save_btn').hide();
+    });
+
+    function getUserInfo(){
+        $.get(basicURL + `/user/getUserInfo?token=${token}`, function(data) {
+            // let res = JSON.parse(data);
+            let res = {};
+            if(typeof data === 'string'){
+                res = JSON.parse(data);
+            }else{
+                res = data
+            };
+            $data = res['data'] != null ? res['data'] : null;
+            if ( $data != null ){
+                $userInfo = $data['user_info'];
+                $('#nickname'). text($userInfo['nickname']);
+                $('#email').    text($userInfo['email']);
+                $('#phone').    text($userInfo['phone']);
+                $('#birthday'). text($userInfo['birthday']);
+                $('#remark').   text($userInfo['remark']);
+                $('#head').     attr("src", $userInfo['icon']);
+
+                $('#nickname_input'). attr('value', $userInfo['nickname']);
+                $('#phone_input'). attr('value', $userInfo['phone']);
+                $('#email_input'). attr('value', $userInfo['email']);
+                $('#birthday_input'). attr('value', $userInfo['birthday']);
+                $('#remark_input'). attr('value', $userInfo['remark']);
+
+            }
+
+
+        })
+
+    }
+
+    function initFormBtn() {
+        $('#c_p_btn').click(function () {
+
+            let formList = $('#c_p_form').serializeArray();
+            console.log(formList)
+            let data = {};
+            formList.forEach((item) => {
+                data[item.name] = item.value;
+            });
+            data['token'] = token;
+            console.log(data);
+            $.post(basicURL + '/user/changePassword', data, function (data) {
+                // let res = JSON.parse(data);
+                let res = {};
+                if(typeof data === 'string'){
+                    res = JSON.parse(data);
+                }else{
+                    res = data
+                };
+                if(res.code === 10000){
+                    alert('修改成功');
+                }else {
+                    alert(res.msg);
+                }
+
+            });
+        });
+
+        $('#save_btn').click(function () {
+            let data = {};
+            data['nickname']    = $('#nickname_input').val();
+            data['email']       = $('#email_input').val();
+            data['phone']       = $('#phone_input').val();
+            data['remark']      = $('#remark_input').val();
+            data['birthday']    = $('#birthday_input').val();
+            data['token'] = token;
+            console.log(data);
+
+            $.post(basicURL + '/user/editUser', data, function (data) {
+                // let res = JSON.parse(data);
+                let res = {};
+                if (typeof data === 'string') {
+                    res = JSON.parse(data);
+                } else {
+                    res = data
+                }
+
+                if (res.code === 10000) {
+                    alert('修改成功');
+                    getUserInfo();
+                    editClick();
+                } else {
+                    alert(res.msg);
+                }
+            });
+
+
+            });
+
+    }
+
+    function editClick(){
+
+        $('#nickname_input').toggle();
+        $('#nickname').toggle();
+
+        $('#phone_input').toggle();
+        $('#phone').toggle();
+
+        $('#email_input').toggle();
+        $('#email').toggle();
+
+        $('#birthday_input').toggle();
+        $('#birthday').toggle();
+
+        $('#remark_input').toggle();
+        $('#remark').toggle();
+
+        $('#edit_btn').toggle()
+        $('#save_btn').toggle()
+
+
+    }
+
+
+
+    layui.use('element', function(){
+        var element = layui.element;
+
+        //…
+    });
+
+    // 上传文件
+    layui.use('upload', function(){
+        var upload = layui.upload;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#upload_head' //绑定元素
+            ,url: basicURL + "/user/changeHeadIcon" //上传接口
+            ,accept: 'images'
+            ,acceptMime: 'image/*'
+            ,size: '1024*5'
+            ,data: {
+                token:token
+            }
+            ,before: function(obj){
+
+            }
+            ,done: function(res){       // 成功回调
+
+                $code   = res['code'];
+                $msg    = res['msg'];
+                if ( $code !== 10000 ){
+                    alert( $msg )
+                }else{
+                    $data   = res['data']
+                    $url    = $data['url'];
+
+                    $('#head').attr("src", $url);
+                }
+            }
+            ,error: function(){
+                //请求异常回调
+
+            }
+        });
+    });
+
+    function ejectChangePasswordWindow() {
+
+
+        layui.use('layer', function () {
+            var layer = layui.layer;
+
+            layer.open({
+                icon: 5,
+                area: ['400px', '320px'],
+                type: 1,
+                title: '',
+                closeBtn: 1,
+                shade: 0.5,
+                shadeClose: 1,
+                anim: 5,
+                isOutAnim: true,
+                resize: false,
+                content: $('#change_password_window'), //这里content是一个普通的String
+
+            });
+
+        });
+    }
+
+</script>
+<div class="" id="change_password_window">
+    <div class="layui-row">
+
+        <div class="layui-col-md8 layui-col-md-offset2 ">
+
+            <form class="layui-form layui-form-pane c_p_form" id="c_p_form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">旧密码：</label>
+                    <div class="layui-input-block">
+                        <label>
+                            <input type="password" name="old_password" required="" lay-verify="required" placeholder="请输入旧密码" autocomplete="off" class="layui-input">
+                        </label>
+                    </div>
+                    <div>
+                        <span class="">&nbsp;</span>
+                    </div>
+                </div>
+
+                <div class="layui-form-item password_input">
+                    <label class="layui-form-label">新密码：</label>
+                    <div class="layui-input-block">
+                        <label>
+                            <input type="password" name="new_password" required="" lay-verify="required" placeholder="请输入新密码" autocomplete="off" class="layui-input">
+                        </label>
+                    </div>
+                    <div>
+                        <span class="">&nbsp;</span>
+                    </div>
+                </div>
+                <div class="layui-form-item password_input">
+                    <label class="layui-form-label">确认密码：</label>
+                    <div class="layui-input-block">
+                        <label>
+                            <input type="password" name="confirm_password" required="" lay-verify="required" placeholder="确认密码" autocomplete="off" class="layui-input">
+                        </label>
+                    </div>
+                    <div>
+                        <span class="">&nbsp;</span>
+                    </div>
+                </div>
+
+                <div class="layui-form-item reg_btn ">
+                    <div class="layui-col-md6 layui-col-md-offset3">
+                        <button type="submit" id="c_p_btn" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid">确定</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+</html>
