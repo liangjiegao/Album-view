@@ -68,7 +68,9 @@
         .c_p_form{
             margin-top: 40px;
         }
-
+        .change_password_window{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -319,7 +321,7 @@
 
     function ejectChangePasswordWindow() {
 
-
+        $('#change_password_window').css("display", "block");
         layui.use('layer', function () {
             var layer = layui.layer;
 
@@ -335,14 +337,19 @@
                 isOutAnim: true,
                 resize: false,
                 content: $('#change_password_window'), //这里content是一个普通的String
+                end:function () {
 
+                    $('#change_password_window').css("display", "none");
+
+
+                }
             });
 
         });
     }
 
 </script>
-<div class="" id="change_password_window">
+<div class="change_password_window" id="change_password_window">
     <div class="layui-row">
 
         <div class="layui-col-md8 layui-col-md-offset2 ">

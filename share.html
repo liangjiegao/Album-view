@@ -58,6 +58,26 @@
         .img_group_div{
             margin-top: 10px;
         }
+        .friend_info_list_div{
+            height: 1000px;
+            margin-top: 50px
+        }
+        .friend_item{
+            padding: 5px;
+        }
+        .friend_head{
+            width: 50px;
+            height: 50px
+        }
+        .remark{
+            margin-top: 5px;
+        }
+        .friend_list_title{
+            padding: 10px;
+        }
+        .add_friend{
+
+        }
     </style>
 
 </head>
@@ -76,54 +96,8 @@
                     <div class="layui-tab-content layui-col-md12">
                         <div class="layui-tab-item layui-show friend_list" id="friend_list">
 
-<!--                            <div class="layui-col-md12 item">-->
-
-<!--                                <div class="layui-col-md1 head_div">-->
-
-<!--                                    <img src="微信图片_20200131140138.jpg" class="head">-->
-
-<!--                                </div>-->
-<!--                                <div class="layui-col-md6 nickname_div">-->
-<!--                                    <span>武大郎</span>-->
-<!--                                </div>-->
-<!--                                <div class="layui-col-md6 info_div">-->
-<!--                                    <span>一个人抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗抗</span>-->
-<!--                                </div>-->
-<!--                                <div class="layui-col-md5 layui-col-md-offset1">-->
-<!--                                    <div class="layui-col-md11">-->
-<!--                                        <img src="微信图片_20200131140138.jpg" class="img">-->
-
-<!--                                    </div>-->
-<!--                                    <div class="up_comment">-->
-<!--                                        <div class="layui-icon layui-icon-praise up"></div>-->
-<!--                                        <div class="layui-icon layui-icon-reply-fill comment"></div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="layui-col-md11 layui-col-md-offset1 time">-->
-<!--                                    15分钟前-->
-<!--                                </div>-->
-<!--                                <div class="layui-col-md6 layui-col-md-offset1 layui-bg-gray up_list">-->
-<!--                                    <ul>-->
-<!--                                        <i class="layui-icon layui-icon-heart-fill up_list_icon"></i>-->
-<!--                                        <li>武松</li>-->
-<!--                                        <li>，金莲</li>-->
-<!--                                        <li>，西门庆</li>-->
-
-<!--                                    </ul>-->
-<!--                                </div>-->
-<!--                                <div class="layui-col-md6 layui-col-md-offset1 layui-bg-gray comment_list">-->
-<!--                                    <div>-->
-<!--                                        <ul>-->
-<!--                                            <li>武松: 稳住！</li>-->
-<!--                                            <li>金莲：？？</li>-->
-<!--                                            <li>西门庆：不是我</li>-->
-<!--                                        </ul>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
                         </div>
-                        <div class="layui-tab-item">
+                        <div class="layui-tab-item world_share_list" id="world_share_list">
 
                         </div>
 
@@ -133,7 +107,18 @@
 
         </div>
         <div class="layui-col-md4">
-            121212
+            <div class="layui-col-md8 layui-col-md-offset2 layui-bg-gray friend_info_list_div">
+                <div class="layui-col-md4 layui-col-md-offset4 friend_list_title">
+                    好友列表
+                </div>
+                <ul class="" id="friend_info_list_ul">
+
+
+                </ul>
+                <div>
+                    <button class="layui-btn layui-btn-normal add_friend layui-col-md4 layui-col-md-offset4">添加好友</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -148,16 +133,68 @@
     layui.use('element', function(){
         var element = layui.element;
 
+        $('.layui-tab-title').on('click', function(title) {
+
+            if ( title.toElement.textContent == '朋友' ){
+                getShareList('friend');
+                nowTab = 'friend';
+            }else if ( title.toElement.textContent == '全部' ){
+                getShareList('world');
+                nowTab = 'world';
+            }
+
+        });
+
         //…
     });
 
     let basicURL    = getBasicUrl();
     let token       = getToken();
+    let nowTab      = 'friend';
 
     $(document).ready(() => {
         // 列表信息
         getShareList( 'friend' );
+        // getShareList( 'world' );
+        getFriendList();
     });
+
+    function getFriendList() {
+
+        $.get(basicURL + `/user/getFriendList?token=${token}`, function(data) {
+            // let res = JSON.parse(data);
+            let res = {};
+            if (typeof data === 'string') {
+                res = JSON.parse(data);
+            } else {
+                res = data
+            }
+            getData = res['data'] != null ? res['data'] : null;
+            if (getData != null) {
+
+                list = getData['list'];
+
+                $("#friend_info_list_ul").empty();
+                list.forEach((item) => {
+
+                    $("#friend_info_list_ul").append(
+                        '<li>' +
+                        '                        <div class="layui-col-md12 friend_item">' +
+                        '                            <img src="'+ item['icon'] +'" class ="layui-col-md2 friend_head">' +
+                        '                            <div class="layui-col-md3 layui-col-md-offset1">' +
+                        '                                <span class="layui-col-md12">'+ item['nickname'] +'</span>' +
+                        '                                <span class="layui-col-md12 remark">'+ item['remark'] +'</span>' +
+                        '                            </div>' +
+                        '                        </div>' +
+                        '                    </li>'
+                    );
+                });
+
+            }
+
+
+        });
+    }
 
     function getShareList( list_type ) {
 
@@ -175,32 +212,44 @@
 
                 list = getData['list'];
 
-                $("#friend_list").empty();
+                let id = 'friend_list';
+                if ( list_type === 'friend' ){
+                    id = 'friend_list';
+                }else if ( list_type === 'world' ){
+                    id = 'world_share_list';
+                }
+
+                $("#" + id).empty();
                 list.forEach((item) => {
-                    console.log(item);
                     var shareTime   = new Date(parseInt(item['create_time']) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
 
                     // 点赞信息
                     var upList      = item['up_account'];
-                    var upListHtml = ''
-                    upList.forEach((item) => {
-                        if ( upListHtml.length > 0 ){
-                            item['nickname'] = "，" + item['nickname'] ;
-                        }
-                        upListHtml += '<li>'+ item['nickname'] +'</li>';
-                    });
+                    var upListHtml = '';
+                    if ( upList != null  ){
+                        upList.forEach((item) => {
+                            if ( upListHtml.length > 0 ){
+                                item['nickname'] = "，" + item['nickname'] ;
+                            }
+                            upListHtml += '<li>'+ item['nickname'] +'</li>';
+                        });
+                    }
+
                     if ( upListHtml !== '' ){
                         upListHtml = '<i class="layui-icon layui-icon-heart-fill up_list_icon"></i>' + upListHtml
                     }
 
                     // 评论信息
                     var commentList     = item['comment_list'];
-                    var commentListHtml = ''
-                    commentList.forEach((item) => {
-                        commentListHtml += '<li>'+ item['user_info']['nickname'] + ':' + item['comment_info'] +'</li>';
-                    });
+                    var commentListHtml = '';
+                    if ( commentList != null  ){
+                        commentList.forEach((item) => {
+                            commentListHtml += '<li>'+ item['user_info']['nickname'] + ':' + item['comment_info'] +'</li>';
+                        });
+                    }
 
-                    $("#friend_list").append(
+
+                    $("#" + id).append(
                         '                            <div class="layui-col-md12 item">' +
                         '                                <div class="layui-col-md1 head_div">' +
                         '                                    <img src="'+item['share_user_info']['icon']+'" class="head">' +
@@ -217,7 +266,7 @@
                         '                                    </div>' +
                         '                                    <div class="up_comment">' +
                         '                                        <div class="layui-icon layui-icon-praise up" value = "'+ item['share_key'] +'" onclick="up( this )"></div>' +
-                        '                                        <div class="layui-icon layui-icon-reply-fill comment"></div>' +
+                        '                                        <div class="layui-icon layui-icon-reply-fill comment" value = "'+ item['share_key'] +'" onclick="clickComment( this )"></div>' +
                         '                                    </div>' +
                         '                                </div>' +
                         '                                <div class="layui-col-md11 layui-col-md-offset1 time">' +
@@ -271,6 +320,53 @@
         getShareList( 'friend' );
     }
 
+    function clickComment( ele ) {
+
+        layui.use('layer', function () {
+            var layer = layui.layer;
+
+            layer.confirm('<input class="layui-input-inline" id="comment_content">', {
+                btn: ['确定'] //可以无限个按钮
+                , yes: function(index, layero){
+                    comment( ele, layer, index );
+                }
+            ,cancel: function(){
+                //右上角关闭回调
+
+            }});
+        });
+
+    }
+
+    function comment( ele , layer, index) {
+
+        let share_key   = $(ele).attr('value');
+        let content     = $('#comment_content').val();
+        let data = {};
+        data['token']           = token;
+        data['share_key']       = share_key;
+        data['comment_info']    = content;
+
+        $.post(basicURL + `/share/commentShare`, data, function(data) {
+
+            if(typeof data === 'string'){
+                res = JSON.parse(data);
+            }else{
+                res = data
+            }
+            if(res.code === 10000){
+                alert('评价成功');
+                getShareList( nowTab );
+                layer.close(index)
+            }else {
+                alert(res.msg);
+            }
+
+        });
+    }
+
+
 </script>
+
 
 </html>

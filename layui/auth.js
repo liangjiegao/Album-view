@@ -16,7 +16,7 @@ function getToken() {
   //   let url = location.origin;
   //   location.href = `${url}/v/views/mgt/mgtLogin.html`
   // }
-  return 'e96f47c1bc063f5652233b31f27707f1'
+  return '14d0a97b4c5740f2f81530c42cb251e4'
 }
 
 function getBasicUrl() {

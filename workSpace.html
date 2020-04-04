@@ -44,9 +44,17 @@
             padding-top: 10px;
             padding-left: 20px;
         }
-        .select_img div img{
-            height: 120px;
+        .select_img img{
+            height: 100px;
             width: 100%;
+        }
+        .left{
+            position: absolute;
+            left: 0;
+        }
+        .right{
+            position: absolute;
+            right: 0;
         }
         .left img{
             width: 30px;
@@ -57,7 +65,6 @@
             width: 30px;
             height: 30px;
             margin-top: 55px;
-            padding-left: 20px;
         }
 
         .dir_select{
@@ -70,23 +77,119 @@
         .add_div{
             margin-top: 100px;
         }
-        .add_div input{
 
+        .file_select{
+            position: absolute;
+            left: 0;
+            z-index: 999;
         }
-        .add_div button{
-            float: left;
+        .file_select_button{
+            position: absolute;
+            left: 0;
         }
         .submit_div{
             margin-top: 30px;
         }
+        .change_password_window{
+            display: none;
+        }
+        .select_show_div{
+            height: 120px;
+        }
+        .select_delete{
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+        .create_dir_window{
+            display: none;
+        }
+        .dir_name_label{
+            padding: 10px;
+        }
+        .create_btn{
+
+            margin-top: 20px;
+
+        }
+        .back_img{
+            width: 50px;
+            height: 50px;
+        }
+        .forward{
+            width: 50px;
+            height: 50px;
+        }
     </style>
 </head>
+
+<div class="change_password_window" id="change_password_window">
+    <div class="layui-row">
+
+        <div class="layui-col-md12 select_show_div">
+
+            <div class='layui-col-md1 left'>
+                <img src="./resouce/left.png">
+            </div>
+            <ul class="img_list" id="img_list">
+
+            </ul>
+
+            <div class='layui-col-md1 right'>
+                <img src="./resouce/right.png">
+            </div>
+        </div>
+
+        <div class="layui-col-md10 add_div layui-col-md-offset2">
+            <input type="file"  class=" layui-btn-xs upload_img file_select" id="upload_img" style="opacity: 0" accept="image/*" multiple>
+            <i class="layui-icon">&#xe67c;添加文件</i>
+        </div>
+
+        <div class="layui-col-md12 submit_div">
+            <button class="layui-col-md4 layui-col-md-offset4 layui-btn layui-btn-radius layui-btn-normal" onclick="upload()">确认</button>
+        </div>
+    </div>
+</div>
+
+<div class="create_dir_window" id="create_dir_window">
+
+    <div class="layui-col-md12" >
+        <label class="layui-col-md12 dir_name_label">文件夹名：</label>
+        <input class="layui-col-md6 layui-input dir_name_input" id="dir_name_input">
+        <button class="layui-col-md6 layui-col-md-offset3 layui-btn layui-btn-normal layui-btn-radius create_btn" onclick="createDir()">创建</button>
+    </div>
+
+</div>
+
 <body>
 
     <div class="layui-container">
+        <div>
+            <div class="layui-col-md1">
+                <a onclick="back()">
+                    <img src="./resouce/left.png" class="back_img">
+                    <label>返回</label>
+                </a>
+            </div>
+            <div class="layui-col-md1 layui-col-md-offset1">
+                <a onclick="forward()">
+                    <label>前进</label>
+                    <img src="./resouce/right.png" class="forward">
+                </a>
+            </div>
+        </div>
+        <div class="layui-input-inline layui-col-md12 search" >
+            <label>
+                <input type="text" id="search_input" name="search" required="" lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+            </label>
+            <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" onclick="getUserImg(0 , true)">搜索</button>
+            <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" onclick="uploadImgWindow()">上传文件</button>
+            <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" onclick="createDirWindow()">添加文件夹</button>
+        </div>
         <div class="layui-col-md12 info_list" id="info_list">
 
         </div>
+
     </div>
 
 </body>
@@ -98,14 +201,26 @@
 <script>
     let basicURL    = getBasicUrl();
     let token       = getToken();
+    let imgFile     = null;
+    let dirId       = 0;
 
     $(document).ready(() => {
         // 列表信息
         getUserImg(0);
     });
 
-    function getUserImg( dir_id ) {
-        $.get(basicURL + `/workspace/getWorkspace?token=${token}&dir_id=${dir_id}`, function(data) {
+    function getUserImg( dir_id, clearRStack = false ) {
+        if ( clearRStack ){
+            stackRight = [];
+        }
+        // 要去的页面与栈顶的不等，才入栈
+        if ( dir_id !== stackLeft[ stackLeft.length - 1 ] ){
+            stackLeft.push(dir_id);
+        }
+        dirId = dir_id;
+        let keyword = $('#search_input').val();
+
+        $.get(basicURL + `/workspace/getWorkspace?token=${token}&dir_id=${dir_id}&keyword=${keyword}`, function(data) {
                 // let res = JSON.parse(data);
                 let res = {};
                 if (typeof data === 'string') {
@@ -126,9 +241,11 @@
 
                         $("#info_list").append(
                             "           <div class='layui-col-md2 dir_div'>"+
-                            "                <div class='layui-card' onclick='getUserImg("+item['id']+")'>" +
+                            "                <div class='layui-card' onclick='getUserImg("+item['id']+", true)'>" +
                             "                    <img src='./resouce/dir.png' alt=''>" +
+                            "                   <div class='layui-col-md12 layui-col-md-offset3'>" + item['name'] + "</div>" +
                             "                </div>" +
+
                             "                <div>" +
                             "                    <a class='layui-icon layui-icon-delete' style='float: right' value='"+item['id']+"' onclick='deleteDir(this)'></a>" +
                             "                </div>" +
@@ -139,7 +256,14 @@
 
                     imgList.forEach((item) => {
 
-
+                    // 标签信息
+                        var tagList     = item['tag_list'];
+                        var tagListHtml = '';
+                        if ( tagList != null  ){
+                            tagList.forEach((item) => {
+                                tagListHtml += '<span class="layui-badge layui-bg-orange tag">' + item + '</span>';
+                            });
+                        }
 
                         $("#info_list").append(
                             "       <div class='layui-col-md2 img_div'>" +
@@ -147,7 +271,7 @@
                             "                    <img src='"+item['url']+"' alt=''>" +
                             "                </div>" +
                             "                <div>" +
-                            "                    <span class='layui-badge layui-bg-orange'>橙</span>"+
+                                            tagListHtml +
                             "                    <a class='layui-icon layui-icon-delete' style='float: right' value='"+item['img_key']+"' onclick='deleteImg(this)'></a>" +
                             "                </div>"+
                             "        </div>"
@@ -161,10 +285,9 @@
     }
 
     function deleteDir(e) {
-        dirId = $(e).attr('value');
         let data = {};
         data['token']   = token;
-        data['dir_id']  = dirId;
+        data['dir_id']  = $(e).attr('value');
         console.log(data)
         $.post(basicURL + `/upload/deleteDir`, data, function(data) {
 
@@ -180,7 +303,7 @@
             }
 
         });
-        getUserImg(0);
+        getUserImg(dirId);
     }
 
     function deleteImg(e) {
@@ -201,75 +324,197 @@
                 alert(res.msg);
             }
         });
-        getUserImg(0);
+        getUserImg( dirId );
     }
 
 
-//    上传文件框
-    layui.use('layer', function () {
-        var layer = layui.layer;
+    function uploadImgWindow(){
 
-        layer.open({
-            icon: 5,
-            area: ['400px', '400px'],
-            type: 1,
-            title: '',
-            closeBtn: 1,
-            shade: 0.5,
-            shadeClose: 1,
-            anim: 5,
-            isOutAnim: true,
-            resize: false,
-            content: $('#change_password_window'), //这里content是一个普通的String
+        $('#change_password_window').css('display', 'block')
+        //    上传文件框
+        layui.use('layer', function () {
+            var layer = layui.layer;
+
+            layer.open({
+                icon: 5,
+                area: ['400px', '400px'],
+                type: 1,
+                title: '',
+                closeBtn: 1,
+                shade: 0.5,
+                shadeClose: 1,
+                anim: 5,
+                isOutAnim: true,
+                resize: false,
+                content: $('#change_password_window'), //这里content是一个普通的String
+                end: function () {
+                    imgFile = [];
+                    $('#img_list').empty();
+                    $('#change_password_window').css("display", "none")
+
+                }
+            });
 
         });
 
+    }
+
+    $(function(){
+
+        $('#upload_img').change(function(){
+            let len = this.files.length;
+            if ( imgFile == null ){
+                imgFile = [];
+            }
+
+            for (let i = 0; i < len; i++) {
+                imgFile[i] = this.files[i];
+                $filePath = URL.createObjectURL(this.files[i]);
+                $('#img_list').append(
+                    '<li id="select_' + i + '">' +
+                    '   <div class="layui-col-md3 select_img">' +
+                    '       <img src="' + $filePath + '" alt="">' +
+                    '       <span class="layui-icon layui-icon-delete select_delete" onclick="deleteSelect( '+  'select_' + i + ', ' + i +' )"></span>' +
+                    '   </div>' +
+                    '</li>'
+                );
+
+            }
+
+
+
+        })
     });
+
+    function deleteSelect( id_tag, index ) {
+        delete imgFile[index];
+        id_tag.remove();
+
+    }
+
+    function upload() {
+
+        let fd = new FormData();
+        fd.append('token', token);
+        fd.append('dir_id', dirId);
+        if ( imgFile  ){
+            imgFile.forEach((item) => {
+                fd.append('file[]', item);
+            });
+        }
+
+        $.ajax({
+            url: basicURL + '/upload/uploadImg',
+            type: 'post',
+            dataType: 'json',
+            data: fd,
+            processData: false,
+            contentType: false,
+
+            success: function (res) {
+                if(typeof res === 'string'){
+                    res = JSON.parse(res);
+                }
+
+                if(res.code === 10000){
+                    alert('上传成功');
+                    // 加载内容
+                    getUserImg( dirId );
+                    layui.layer.closeAll()
+                    // 关闭弹窗
+                    $('#change_password_window').css("display", "none")
+                }else {
+                    alert(res.msg);
+                }
+            },
+        })
+
+    }
+
+    function createDirWindow() {
+        $("#create_dir_window").css('display', 'block');
+        //    上传文件框
+        layui.use('layer', function () {
+            var layer = layui.layer;
+
+            layer.open({
+                icon: 5,
+                type: 1,
+                title: '创建文件夹',
+                area:['300px', '200px'],
+                closeBtn: 1,
+                shade: 0.5,
+                shadeClose: 1,
+                anim: 5,
+                isOutAnim: true,
+                resize: false,
+                content: $('#create_dir_window'), //这里content是一个普通的String
+                end: function () {
+
+                    $("#create_dir_window").css('display', 'none');
+                }
+            });
+        });
+    }
+
+    function createDir() {
+        let data = {};
+        data['token']       = token;
+        data['dir_name']    = $('#dir_name_input').val();
+        data['pid']         = dirId;
+
+
+        $.post(basicURL + `/upload/createDir`, data,  function (data) {
+
+            if(typeof data === 'string'){
+                res = JSON.parse(data);
+            }else{
+                res = data
+            }
+            if(res.code === '10000'){
+                alert('创建成功');
+                $('#dir_name_input').val('');
+                layui.layer.closeAll()
+            }else {
+                alert(res.msg);
+            }
+
+        });
+        getUserImg( dirId );
+
+    }
+
+    let stackLeft   = [];
+    let stackRight  = [];
+
+    function back() {
+
+        let popDirId = stackLeft.pop();
+        if ( popDirId !== 0 && popDirId !== undefined ){
+
+            stackRight.push(popDirId);
+            console.log(popDirId)
+
+            getUserImg( stackLeft[ stackLeft.length - 1 ] )
+        }
+
+    }
+
+    function forward() {
+
+        let popDirId = stackRight.pop();
+        if ( popDirId !== undefined ){
+            stackLeft.push(popDirId);
+            console.log(popDirId)
+
+            getUserImg( popDirId )
+        }
+
+
+    }
 
 </script>
 
-<div class="" id="change_password_window">
-    <div class="layui-row">
 
-        <div class="layui-col-md12">
-
-            <div class='layui-col-md1 left'>
-                <img src="./resouce/left.png">
-            </div>
-
-            <div class='layui-col-md3 select_img'>
-                <div class='layui-card'>
-                    <img src='微信图片_20200131140138.jpg' alt=''>
-                </div>
-            </div>
-            <div class='layui-col-md3 select_img'>
-                <div class='layui-card'>
-                    <img src='微信图片_20200131140138.jpg' alt=''>
-                </div>
-            </div>
-            <div class='layui-col-md3 select_img'>
-                <div class='layui-card'>
-                    <img src='微信图片_20200131140138.jpg' alt=''>
-                </div>
-            </div>
-            <div class='layui-col-md1 right'>
-                <img src="./resouce/right.png">
-            </div>
-        </div>
-
-        <div class="layui-col-md12 dir_select_div">
-            <button class="layui-col-md-offset2 layui-btn layui-btn-xs layui-bg-orange">相册位置</button>
-        </div>
-
-        <div class="layui-col-md12 add_div">
-            <input type="file" class="layui-col-md-offset2 layui-btn-xs upload_img" id="upload_img" value="111" style="opacity: 0">
-            <button class="layui-btn layui-btn-xs layui-bg-orange"><i class="layui-icon">&#xe67c;</i>添加文件</button>
-        </div>
-
-        <div class="layui-col-md12 submit_div">
-            <button class="layui-col-md4 layui-col-md-offset4 layui-btn layui-btn-radius layui-btn-normal">确认</button>
-        </div>
-    </div>
-</div>
 
 </html>

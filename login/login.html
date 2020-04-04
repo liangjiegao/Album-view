@@ -24,7 +24,9 @@
         .reg_btn{
             padding-top: 30px;
         }
-
+        .login{
+            display: none;
+        }
     </style>
 
 </head>
@@ -34,7 +36,7 @@
 
 </body>
 
-<div class="" id="login">
+<div class="login" id="login">
     <div class="layui-row">
 
         <div class="layui-col-md10 layui-col-md-offset1">
@@ -59,7 +61,7 @@
                                 <label class="layui-form-label">邮箱：</label>
                                 <div class="layui-input-block">
                                     <label>
-                                        <input type="text" name="email" required="" lay-verify="required" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+                                        <input type="text" name="email" required="" lay-verify="required" placeholder="请输入邮箱" autocomplete="off" class="layui-input email_input_login" id="email_input_login">
                                     </label>
                                 </div>
                                 <div>
@@ -71,13 +73,13 @@
                                 <label class="layui-form-label">密码：</label>
                                 <div class="layui-input-block">
                                     <label>
-                                        <input type="password" name="password" required="" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                                        <input type="password" name="password" required="" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input" id="password_login">
                                     </label>
                                 </div>
                             </div>
                             <div class="layui-form-item login_btn ">
                                 <div class="layui-col-md6 layui-col-md-offset3">
-                                    <button type="button" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid">登录</button>
+                                    <button type="button" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid" onclick="doLogin()">登录</button>
                                 </div>
                             </div>
                             <div class="layui-form-item forget_password">
@@ -96,7 +98,7 @@
                                     <label class="layui-form-label">邮箱：</label>
                                     <div class="layui-input-block">
                                         <label>
-                                            <input type="text" name="email" required="" lay-verify="required" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+                                            <input type="text" name="email" required="" lay-verify="required" placeholder="请输入邮箱" autocomplete="off" class="layui-input email_input_reg" id="email_input_reg">
                                         </label>
                                     </div>
                                     <div>
@@ -108,7 +110,7 @@
                                     <label class="layui-form-label">密码：</label>
                                     <div class="layui-input-block">
                                         <label>
-                                            <input type="password" name="password" required="" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                                            <input type="password" name="password" required="" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input" id="password">
                                         </label>
                                     </div>
                                     <div>
@@ -119,7 +121,7 @@
                                     <label class="layui-form-label">确认密码：</label>
                                     <div class="layui-input-block">
                                         <label>
-                                            <input type="password" name="confirm" required="" lay-verify="required" placeholder="确认密码" autocomplete="off" class="layui-input">
+                                            <input type="password" name="confirm" required="" lay-verify="required" placeholder="确认密码" autocomplete="off" class="layui-input" id="confirm_password">
                                         </label>
                                     </div>
                                     <div>
@@ -130,11 +132,12 @@
                                     <label class="layui-form-label">验证码：</label>
                                     <div class="layui-col-md3">
                                         <label>
-                                            <input type="text" name="check-code" required="" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
-
+                                            <input type="text" name="check-code" required="" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" id="check_code">
                                         </label>
                                     </div>
-
+                                    <div class="layui-col-md4 layui-col-md-offset1">
+                                        <button type="button" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid" onclick="getRegCheckCode()" id="get_reg_check_code">获取验证码</button>
+                                    </div>
 
                                     <div>
                                         <span class="">&nbsp;</span>
@@ -143,7 +146,7 @@
 
                                 <div class="layui-form-item reg_btn ">
                                     <div class="layui-col-md6 layui-col-md-offset3">
-                                        <button type="button" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid">注册</button>
+                                        <button type="button" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid" onclick="doReg()">注册</button>
                                     </div>
                                 </div>
 
@@ -160,8 +163,10 @@
 
 <script src="../layui/jquery.js"></script>
 <script src="../layui/layui.js"></script>
+<script src="../layui/auth.js"></script>
 
 <script>
+    let basicURL    = getBasicUrl();
 
     layui.use('element', function(){
         var element = layui.element;
@@ -212,6 +217,154 @@
         //     //return false 开启该代码可禁止点击该按钮关闭
         // }});
     });
+
+    function getRegCheckCode() {
+
+        let email = $('#email_input_reg').val();
+        console.log(email)
+        //验证邮箱
+        var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+        if( !reg.test( email ) )
+        {
+            alert("邮箱格式不对");
+            return false;
+        }
+        let data = {};
+        data['tag_email'] = email;
+
+        $.post(basicURL + `/login/sendRegCode`, data,  function (data) {
+
+            if(typeof data === 'string'){
+                data = JSON.parse(data);
+            }
+            console.log(data)
+            if(data.code == '10000'){
+                alert('发送成功');
+                $('#get_reg_check_code').attr("disabled","true");
+                $('#get_reg_check_code').attr("class","layui-btn layui-btn-disabled");
+                getRandomCode();
+            }else {
+                alert(data.msg);
+            }
+
+        });
+
+    }
+
+    var time = 10;
+    //倒计时
+    function getRandomCode() {
+        console.log(time)
+
+        if (time === 0) {
+            time = 10;
+            $('#get_reg_check_code').text("获取验证码");
+            $('#get_reg_check_code').removeAttr("disabled");
+            $('#get_reg_check_code').attr("class","layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid");
+            return;
+        } else {
+            time--;
+            $('#get_reg_check_code').text(time + '秒后重试');
+            console.log(time)
+        }
+        setTimeout(function() {
+            getRandomCode();
+        },1000);
+    }
+
+    function doReg() {
+
+        let email               = $('#email_input_reg').val();
+        let password            = $('#password').val();
+        let confirm_password    = $('#confirm_password').val();
+        let check_code          = $('#check_code').val();
+
+        //验证邮箱
+        var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+        if( !reg.test( email ) )
+        {
+            alert("邮箱格式不对");
+            return false;
+        }
+        if ( password.length < 6 ){
+            alert('密码不能低于6位');
+            return;
+        }
+        if ( password !== confirm_password ){
+            alert('密码与确认密码不一致');
+           return;
+        }
+        if ( check_code === '' ){
+            alert('验证码不能为空');
+            return;
+        }
+
+        let data = {};
+
+        data['email']       = email;
+        data['check_code']  = check_code;
+        data['password']    = password;
+        data['confirm']     = confirm_password;
+
+        $.post(basicURL + `/login/reg`, data,  function (data) {
+
+            if(typeof data === 'string'){
+                data = JSON.parse(data);
+            }
+            console.log(data);
+            if(data.code == '10000'){
+                alert('注册成功');
+            }else {
+                alert(data.msg);
+            }
+
+        });
+
+
+
+    }
+
+    function doLogin() {
+
+        let email               = $('#email_input_login').val();
+        let password            = $('#password_login').val();
+
+        //验证邮箱
+        var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+        if( !reg.test( email ) )
+        {
+            alert("邮箱格式不对");
+            return false;
+        }
+        if ( password.length < 6 ){
+            alert('密码不能低于6位');
+            return;
+        }
+
+        let data = {};
+
+        data['email']       = email;
+        data['password']    = password;
+
+        $.post(basicURL + `/login/login`, data,  function (data) {
+
+            if(typeof data === 'string'){
+                data = JSON.parse(data);
+            }
+            console.log(data);
+            if(data.code == '10000'){
+                alert('登录成功');
+                layui.layer.closeAll()
+            }else {
+                alert(data.msg);
+            }
+
+        });
+
+
+
+    }
+
 
 </script>
 </html>
