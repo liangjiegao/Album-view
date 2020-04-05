@@ -4,124 +4,33 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="./layui/css/layui.css">
-<!--    <link rel="stylesheet" href="./layui/css/index.css">-->
-    <style>
-        .img_div{
-            padding: 20px;
-        }
-        .layui-card{
-            width: 100%;
-            height: 120px;
-        }
-        .layui-card img{
-            width: 100%;
-            height: 100%;
-        }
-        .dir_div{
-            padding: 20px;
-        }
+    <link rel="stylesheet" href="./layui/css/top.css">
+    <link rel="stylesheet" href="./layui/css/sidebar.css">
+    <link rel="stylesheet" href="./layui/css/workspace.css">
 
-        .dir_div div img{
-            height: 50px;
-            width: 50px;
-            /*clear: both;*/
-            /*display: block;*/
-            /*margin: auto;*/
-            /*position: absolute;*/
-            margin-left: 50px;
-            margin-top: 35px;
-        }
-        .more{
-            width: 100px;
-            margin: 0 auto;
-            /*float: left;*/
-            clear: left;
-            padding-top: 100px;
-            padding-bottom: 50px;
-        }
 
-        .select_img{
-            padding-top: 10px;
-            padding-left: 20px;
-        }
-        .select_img img{
-            height: 100px;
-            width: 100%;
-        }
-        .left{
-            position: absolute;
-            left: 0;
-        }
-        .right{
-            position: absolute;
-            right: 0;
-        }
-        .left img{
-            width: 30px;
-            height: 30px;
-            margin-top: 55px;
-        }
-        .right img{
-            width: 30px;
-            height: 30px;
-            margin-top: 55px;
-        }
 
-        .dir_select{
-            width: 50px;
-            height: 50px;
-        }
-        .dir_select_div{
-            margin-top: 30px;
-        }
-        .add_div{
-            margin-top: 100px;
-        }
-
-        .file_select{
-            position: absolute;
-            left: 0;
-            z-index: 999;
-        }
-        .file_select_button{
-            position: absolute;
-            left: 0;
-        }
-        .submit_div{
-            margin-top: 30px;
-        }
-        .change_password_window{
-            display: none;
-        }
-        .select_show_div{
-            height: 120px;
-        }
-        .select_delete{
-            position: absolute;
-            right: 0;
-            bottom: 0;
-        }
-        .create_dir_window{
-            display: none;
-        }
-        .dir_name_label{
-            padding: 10px;
-        }
-        .create_btn{
-
-            margin-top: 20px;
-
-        }
-        .back_img{
-            width: 50px;
-            height: 50px;
-        }
-        .forward{
-            width: 50px;
-            height: 50px;
-        }
-    </style>
 </head>
+
+<div class="sidebar" id="sidebar">
+    <div class="layui-row">
+
+        <div class="layui-col-md8 layui-col-md-offset2">
+
+
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title sidebar_text"  id="sidebar_tab">
+                    <li class="layui-this">首页</li>
+                    <li>我的相册</li>
+                    <li>社区动态</li>
+                    <li>个人信息</li>
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <div class="change_password_window" id="change_password_window">
     <div class="layui-row">
@@ -162,6 +71,24 @@
 </div>
 
 <body>
+<div class="layui-col-md12 top">
+    <div class="layui-col-md4">
+        <img class="preload-me wf-mobile-hidden"
+             src="https://ccdn.goodq.top/caches/85e9413af2fb7f593b2c9e26f027fb64/aHR0cHM6Ly81ZDZjYWM5NThlNzFmLnQ3NC5xaWZlaXllLmNvbS9xZnktY29udGVudC91cGxvYWRzLzIwMTkvMDgvNjY5ZTBhOWMxMjE0ODI4YTcwZWFiOWUyYjM5NTkyMDAtOTAud2VicA_p_p100_p_3D_p_p100_p_3D.webp"
+             width="50" height="50" alt="">
+
+    </div>
+
+    <!--            侧边栏点击按钮-->
+    <div class="layui-col-md1 layui-col-md-offset7 mane-but" id="mane-but" onclick="openSidebar()">
+        <div class="img1" style="background-color: #1d1d1d; width: 20px; height: 2px;">
+        </div>
+        <div class="img2" style="background-color: #1d1d1d; width: 20px; height: 2px; margin-top: 12px">
+        </div>
+    </div>
+
+
+</div>
 
     <div class="layui-container">
         <div>
@@ -197,8 +124,12 @@
 <script src="layui/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script src="layui/auth.js"></script>
+<script src="layui/sidebar.js"></script>
 
 <script>
+
+
+
     let basicURL    = getBasicUrl();
     let token       = getToken();
     let imgFile     = null;

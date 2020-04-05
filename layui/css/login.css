@@ -1,0 +1,21 @@
+.login_text{
+    font-size: x-large;
+}
+.reg_text{
+    font-size: x-large;
+}
+.login_title{
+    padding-top: 20px;
+}
+.login_teb{
+    padding-top: 50px;
+}
+.login_btn{
+    padding-top: 80px;
+}
+.reg_btn{
+    padding-top: 30px;
+}
+/*.login{*/
+/*    display: none;*/
+/*}*/

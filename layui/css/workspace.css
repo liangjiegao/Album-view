@@ -1,0 +1,117 @@
+.layui-container{
+    padding-top: 80px;
+}
+.img_div{
+    padding: 20px;
+}
+.layui-card{
+    width: 100%;
+    height: 120px;
+}
+.layui-card img{
+    width: 100%;
+    height: 100%;
+}
+.dir_div{
+    padding: 20px;
+}
+
+.dir_div div img{
+    height: 50px;
+    width: 50px;
+    /*clear: both;*/
+    /*display: block;*/
+    /*margin: auto;*/
+    /*position: absolute;*/
+    margin-left: 50px;
+    margin-top: 35px;
+}
+.more{
+    width: 100px;
+    margin: 0 auto;
+    /*float: left;*/
+    clear: left;
+    padding-top: 100px;
+    padding-bottom: 50px;
+}
+
+.select_img{
+    padding-top: 10px;
+    padding-left: 20px;
+}
+.select_img img{
+    height: 100px;
+    width: 100%;
+}
+.left{
+    position: absolute;
+    left: 0;
+}
+.right{
+    position: absolute;
+    right: 0;
+}
+.left img{
+    width: 30px;
+    height: 30px;
+    margin-top: 55px;
+}
+.right img{
+    width: 30px;
+    height: 30px;
+    margin-top: 55px;
+}
+
+.dir_select{
+    width: 50px;
+    height: 50px;
+}
+.dir_select_div{
+    margin-top: 30px;
+}
+.add_div{
+    margin-top: 100px;
+}
+
+.file_select{
+    position: absolute;
+    left: 0;
+    z-index: 999;
+}
+.file_select_button{
+    position: absolute;
+    left: 0;
+}
+.submit_div{
+    margin-top: 30px;
+}
+.change_password_window{
+    display: none;
+}
+.select_show_div{
+    height: 120px;
+}
+.select_delete{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.create_dir_window{
+    display: none;
+}
+.dir_name_label{
+    padding: 10px;
+}
+.create_btn{
+
+    margin-top: 20px;
+
+}
+.back_img{
+    width: 50px;
+    height: 50px;
+}
+.forward{
+    width: 50px;
+    height: 50px;
+}

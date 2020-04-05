@@ -1,0 +1,39 @@
+.img1 {
+    transform-origin:100% 100%;
+    transition: All 0.4s ease-in-out;
+    -webkit-transition: All 0.4s ease-in-out;
+    -moz-transition: All 0.4s ease-in-out;
+    -o-transition: All 0.4s ease-in-out;
+}
+.img2 {
+    transform-origin:100% 100%;
+    transition: All 0.4s ease-in-out;
+    -webkit-transition: All 0.4s ease-in-out;
+    -moz-transition: All 0.4s ease-in-out;
+    -o-transition: All 0.4s ease-in-out;
+}
+.mane-but:hover .img1{
+
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+}
+.mane-but:hover .img2{
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+}
+.sidebar{
+    display: none;
+}
+.top{
+    margin: 20px 40px;
+    position:fixed;
+    align-items:center;
+    z-index:999;
+    background:rgba(0,0, 0, 0);
+}

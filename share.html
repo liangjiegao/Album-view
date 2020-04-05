@@ -4,86 +4,53 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="./layui/css/layui.css">
+    <link rel="stylesheet" href="./layui/css/share.css">
+    <link rel="stylesheet" href="./layui/css/top.css">
+    <link rel="stylesheet" href="./layui/css/sidebar.css">
 
-    <style>
-
-        .item{
-            margin-top: 20px;
-        }
-        .head{
-            width: 50px;
-            height: 50px;
-        }
-        .info_div{
-            margin-top: 10px;
-        }
-        .img{
-            width: 100%;
-            max-height: 400px;
-        }
-        .up_comment{
-            position: absolute;
-            right: 0;
-            bottom: 0;
-        }
-        .up{
-            float: left;
-        }
-        .comment{
-            float: left;
-            margin-left: 10px;
-        }
-        .time{
-            margin-top: 10px;
-        }
-        .up_list{
-            margin-top: 10px;
-            padding: 2px;
-        }
-        .up_list ul{
-            list-style:none;
-            float: left;
-        }
-        .up_list li{
-            float: left;
-        }
-        .up_list i{
-            float: left;
-            padding-right: 5px;
-        }
-        .comment_list {
-            padding: 5px;
-            margin-top: 5px;
-        }
-        .img_group_div{
-            margin-top: 10px;
-        }
-        .friend_info_list_div{
-            height: 1000px;
-            margin-top: 50px
-        }
-        .friend_item{
-            padding: 5px;
-        }
-        .friend_head{
-            width: 50px;
-            height: 50px
-        }
-        .remark{
-            margin-top: 5px;
-        }
-        .friend_list_title{
-            padding: 10px;
-        }
-        .add_friend{
-
-        }
-    </style>
 
 </head>
-<body>
+<div class="sidebar" id="sidebar">
+    <div class="layui-row">
 
-    <div class="layui-container">
+        <div class="layui-col-md8 layui-col-md-offset2">
+
+
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title sidebar_text"  id="sidebar_tab">
+                    <li class="layui-this">首页</li>
+                    <li>我的相册</li>
+                    <li>社区动态</li>
+                    <li>个人信息</li>
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<body>
+<div class="layui-col-md12 top">
+    <div class="layui-col-md4">
+        <img class="preload-me wf-mobile-hidden"
+             src="https://ccdn.goodq.top/caches/85e9413af2fb7f593b2c9e26f027fb64/aHR0cHM6Ly81ZDZjYWM5NThlNzFmLnQ3NC5xaWZlaXllLmNvbS9xZnktY29udGVudC91cGxvYWRzLzIwMTkvMDgvNjY5ZTBhOWMxMjE0ODI4YTcwZWFiOWUyYjM5NTkyMDAtOTAud2VicA_p_p100_p_3D_p_p100_p_3D.webp"
+             width="50" height="50" alt="">
+
+    </div>
+
+    <!--            侧边栏点击按钮-->
+    <div class="layui-col-md1 layui-col-md-offset7 mane-but" id="mane-but" onclick="openSidebar()">
+        <div class="img1" style="background-color: #1d1d1d; width: 20px; height: 2px;">
+        </div>
+        <div class="img2" style="background-color: #1d1d1d; width: 20px; height: 2px; margin-top: 12px">
+        </div>
+    </div>
+
+
+</div>
+
+<div class="layui-container">
 
         <div class="layui-col-md8">
 
@@ -127,6 +94,7 @@
 <script src="layui/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script src="layui/auth.js"></script>
+<script src="layui/sidebar.js"></script>
 
 <script>
 
