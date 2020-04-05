@@ -1,4 +1,4 @@
-let _tokenKey = 'token'
+let _tokenKey = 'token';
 var host = 'http://120.27.210.67:';
 var prot = '8000';
 
@@ -25,7 +25,7 @@ function getToken() {
     if ( index > 0 ){
       base = url.substring(0, index);
     }
-    // $(location).attr('href', base + '/login/login.html');
+    $(location).attr('href', base + '/login/login.html');
   }
   return token;
 }
