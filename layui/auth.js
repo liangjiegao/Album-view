@@ -5,7 +5,7 @@ var prot = '8000';
 function getToken() {
   let token = ''
   let tk = document.cookie;
-  console.log(tk);
+  console.log("token" + tk);
   if ( tk != null ){
     let cs = tk.split(';')
     for (let i = 0; i < cs.length; i++) {
@@ -25,7 +25,7 @@ function getToken() {
     if ( index > 0 ){
       base = url.substring(0, index);
     }
-    $(location).attr('href', base + '/login/login.html');
+    $(location).attr('href', base + '/login.html');
   }
   return token;
 }
@@ -44,7 +44,7 @@ function checkLogin( code ) {
     if ( index > 0 ){
       base = url.substring(0, index);
     }
-    $(location).attr('href', base + '/login/login.html');
+    $(location).attr('href', base + '/login.html');
 
   }
 
