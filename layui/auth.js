@@ -4,8 +4,8 @@ var prot = '8000';
 
 function getToken() {
   let token = ''
-  let tk = $.cookie(_tokenKey);
-  console.log($.cookie(_tokenKey))
+  let tk = document.cookie;
+  console.log(tk);
   if ( tk != null ){
     let cs = tk.split(';')
     for (let i = 0; i < cs.length; i++) {
