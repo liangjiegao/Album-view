@@ -70,7 +70,24 @@
 .friend_list_title{
     padding: 10px;
 }
+.apply_title{
+    padding: 10px;
+
+}
 .add_friend{
 
 }
+.apply_div{
+}
 
+.apply_window{
+    display: none;
+}
+.my_apply_title{
+    margin-top: 10px;
+    font-size: 13pt;
+}
+.apply_for_me_title{
+    margin-top: 10px;
+    font-size: 13pt;
+}

@@ -1,6 +1,8 @@
 let _tokenKey = 'token';
-var host = 'http://120.27.210.67:';
-var prot = '8002';
+var host = 'http://localhost:';
+// var host = 'http://120.27.210.67:';
+// var prot = '8002';
+var prot = '8000';
 
 function getToken() {
   let token = ''

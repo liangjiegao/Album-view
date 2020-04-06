@@ -70,6 +70,42 @@
 
 </div>
 
+<div class="img_pop" id="img_pop">
+    <div class="layui-col-md8" id="img_info_div">
+        <img id="show_img" class="layui-col-md12 show_img" src="微信图片_20200131140138.jpg">
+        <div class="layui-col-md-offset1 tag_div" id="tag_div">
+
+        </div>
+        <div class=" add_tag_btn_div">
+           <button class="layui-btn layui-btn-xs add_tag_btn" onclick="popAddTag()"><span>添加标签</span></button>
+        </div>
+    </div>
+    <div class="layui-col-md4">
+        <textarea id="vod_content" class="vod_content" name="" type="text/plain" placeholder="写下你的心情（限制800字）"
+                  rows="20" cols="35" maxlength="800"></textarea>
+        <div class="layui-col-md10 share_type_div" >
+            <label for="share_type">能看到的小可爱有：</label>
+            <select name="share_type" id="share_type" >
+                <option value="0">仅自己</option>
+                <option value="1">朋友可见</option>
+                <option value="2">所有人</option>
+            </select>
+        </div>
+        <button type="button" class="layui-col-md10 layui-btn layui-btn-radius layui-btn-normal do_share" onclick="doShare()">分享</button>
+
+
+
+    </div>
+</div>
+
+<div class="add_tag_div" id="add_tag_div">
+
+    <label>
+        <input type="text" class="layui-input" id="tag_info" maxlength="4">
+    </label>
+
+</div>
+
 <body>
 <div class="layui-col-md12 top">
     <div class="layui-col-md4">
@@ -130,10 +166,12 @@
 
 
 
-    let basicURL    = getBasicUrl();
-    let token       = getToken();
-    let imgFile     = null;
-    let dirId       = 0;
+    let basicURL        = getBasicUrl();
+    let token           = getToken();
+    let imgFile         = null;
+    let dirId           = 0;
+    let maxTagNum       = 3;
+    let maxTagTextLen   = 7;
 
     $(document).ready(() => {
         // 列表信息
@@ -185,34 +223,53 @@
 
                     });
 
-                    imgList.forEach((item) => {
-
-                    // 标签信息
-                        var tagList     = item['tag_list'];
-                        var tagListHtml = '';
-                        if ( tagList != null  ){
-                            tagList.forEach((item) => {
-                                tagListHtml += '<span class="layui-badge layui-bg-orange tag">' + item + '</span>';
-                            });
-                        }
-
-                        $("#info_list").append(
-                            "       <div class='layui-col-md2 img_div'>" +
-                            "                <div class='layui-card'>" +
-                            "                    <img src='"+item['url']+"' alt=''>" +
-                            "                </div>" +
-                            "                <div>" +
-                                            tagListHtml +
-                            "                    <a class='layui-icon layui-icon-delete' style='float: right' value='"+item['img_key']+"' onclick='deleteImg(this)'></a>" +
-                            "                </div>"+
-                            "        </div>"
-                        );
-
-                    });
-
                 }
 
+
+                imgList.forEach((item) => {
+
+                    // 标签信息
+                    var tagList     = item['tag_list'];
+                    var tagListHtml = '';
+                    console.log(tagList);
+                    if ( tagList != null  ){
+                        let tn = 0;
+                        let tl = 0;
+                        try {
+
+                            $.each(tagList, function(tagKet, item){
+                                tn++;
+                                tl += item.length;
+                                if ( tn > maxTagNum ){
+                                    throw new Error('tag num limit');
+                                }
+                                if ( tl > maxTagTextLen ){
+                                    throw new Error('tag text length limit');
+                                }
+
+
+                                tagListHtml += '<span class="layui-badge layui-bg-orange tag">' + item + '</span>';
+
+                            });
+                        }catch (e) {
+
+                        }
+                }
+                let json_tlh = JSON.stringify(tagList);
+                $("#info_list").append(
+                    "       <div class='layui-col-md2 img_div'>" +
+                    "                <div class='layui-card' onclick='popImg(\""+item['url'] + "\", \""+item['img_key']+"\", "+ json_tlh +")'>" +
+                    "                    <img src='"+item['url']+"' alt=''>" +
+                    "                </div>" +
+                    "               <div class='tag_group'>" +
+                    tagListHtml +
+                    "                    <a class='layui-icon layui-icon-delete' id='delete' style='float: right' value='"+item['img_key']+"' onclick='deleteImg(this)'></a>" +
+                    "                </div>"+
+                    "        </div>"
+                );
             });
+        });
+
     }
 
     function deleteDir(e) {
@@ -444,6 +501,186 @@
 
     }
 
+    let tagTemp = '<span class="layui-badge layui-bg-orange tag">tag_name<a class=" del_tag" id="del_tag" value="tag_key" onclick="deleteTag(this)">x</a></span>';
+
+    function popImg( url, img_key, json_tlh ) {
+
+        let maxTagNum       = 8;
+        let maxTagTextLen   = 20;
+
+        var tagListHtml = '';
+        if ( json_tlh !== undefined ){
+            var tagList     = json_tlh;
+            if ( tagList != null  ){
+                let tn = 0;
+                let tl = 0;
+
+                try {
+
+                    $.each(tagList,function(tagKey, item) {
+                        tn++;
+                        tl += item.length;
+                        if ( tn > maxTagNum ){
+                            throw new Error('tag num limit');
+                        }
+                        if ( tl > maxTagTextLen ){
+                            throw new Error('tag text length limit');
+                        }
+                        let tmp = tagTemp.replace('tag_name', item);
+                        tmp = tmp.replace('tag_key', tagKey);
+                        tagListHtml += tmp
+                    });
+                }catch (e) {
+
+                }
+
+            }
+        }
+
+        // $('#show_img').attr('src', url);
+        $('#show_img').attr('value', img_key);
+
+        $('#tag_div').append(tagListHtml);
+
+        // 查看图片框
+        layui.use('layer', function () {
+            var layer = layui.layer;
+
+            layer.open({
+                icon: 5,
+                area: ['800px', '500px'],
+                type: 1,
+                title: '',
+                closeBtn: 1,
+                shade: 0.5,
+                shadeClose: 1,
+                anim: 5,
+                isOutAnim: true,
+                resize: false,
+                content: $('#img_pop'), //这里content是一个普通的String
+                end: function () {
+
+                    // $('#show_img').attr('src', '');
+                    $('#tag_div').empty();
+                }
+            });
+
+        });
+
+
+    }
+
+    var popTagIndex = 0;
+
+    function popAddTag() {
+
+        let img_key = $('#show_img').attr('value');
+
+        // 查看图片框
+        layui.use('layer', function () {
+            var layer = layui.layer;
+
+            popTagIndex = layer.open({
+                title: '添加标签'
+                ,shadeClose: 1
+                ,content: $('#add_tag_div')
+                ,yes:function () {
+
+                    doAddTag( img_key );
+
+                }
+            });
+        });
+
+    }
+
+    function doAddTag( img_key ) {
+
+        let tagName = $('#tag_info').val();
+
+        if ( tagName.length > 4 ){
+            alert( "标签文字不能超过4个" );
+            return;
+        }
+
+        let data = {};
+        data['token']       = token;
+        data['img_key']     = img_key;
+        data['tag_name']    = tagName;
+
+        $.post(basicURL + `/tag/addTag`, data, function(data) {
+
+            if(typeof data === 'string'){
+                res = JSON.parse(data);
+            }else{
+                res = data
+            }
+            if(res.code == '10000'){
+                alert('添加成功');
+                layui.layer.close(popTagIndex);
+                let tagListHtml = tagTemp.replace('tag_name', tagName);;
+                $('#tag_div').append(tagListHtml);
+
+            }else {
+                alert(res.msg);
+            }
+        });
+
+    }
+
+    function doShare() {
+
+        let img_key     = $('#show_img').attr('value');
+        let info        = $('#vod_content').val();
+        let share_type  = $("#share_type ").val();
+
+        let data = {};
+        data['token']       = token;
+        data['info']        = info;
+        data['share_type']  = share_type;
+        data['img_key']     = img_key;
+        $.post(basicURL + `/share/createShare`, data, function(data) {
+
+            if(typeof data === 'string'){
+                res = JSON.parse(data);
+            }else{
+                res = data
+            }
+            if(res.code == '10000'){
+                alert('分享成功');
+            }else {
+                alert(res.msg);
+            }
+        });
+
+    }
+
+    function deleteTag(ele) {
+
+        let tagKey  = $(ele).attr('value');
+        let img_key = $('#show_img').attr('value');
+
+        let data = {};
+        data['token']       = token;
+        data['img_key']     = img_key;
+        data['tag_key']     = tagKey;
+
+        $.post(basicURL + `/tag/deleteTag`, data, function(data) {
+
+            if (typeof data === 'string') {
+                res = JSON.parse(data);
+            } else {
+                res = data
+            }
+            if (res.code == '10000') {
+                alert('删除成功');
+                $(ele).parent().remove();
+            } else {
+                alert(res.msg);
+            }
+        });
+
+    }
 </script>
 
 

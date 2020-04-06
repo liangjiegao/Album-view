@@ -325,7 +325,7 @@
                 if ( index > 0 ){
                     base = url.substring(0, index);
                 }
-                $(location).attr('href', base + '/login.html');
+                $(location).attr('href', base + '/index.html');
             }else {
                 alert(data.msg);
             }
@@ -337,9 +337,12 @@
     }
     function setCookie( set_token ) {
         // alert("设置token" + _tokenKey + " " + set_token);
-        $.cookie(_tokenKey, set_token, { expires: 7 });
-        // document.cookie = _tokenKey + '=' + set_token;
-        console.log($.cookie(_tokenKey))
+        // $.cookie(_tokenKey, set_token);
+        // console.log($.cookie(_tokenKey));
+        //
+        // console.log(_tokenKey + '=' + set_token);
+        document.cookie = _tokenKey + '=' + set_token;
+        console.log(document.cookie)
     }
 
 </script>

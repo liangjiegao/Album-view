@@ -30,6 +30,12 @@
     </div>
 </div>
 
+<div class="apply_window" id="apply_window">
+    <label>
+        <input type="text" class="layui-input" id="friend_email" maxlength="50" placeholder="请输入好友邮箱">
+    </label>
+</div>
+
 <body>
 <div class="layui-col-md12 top">
     <div class="layui-col-md4">
@@ -74,17 +80,31 @@
 
         </div>
         <div class="layui-col-md4">
-            <div class="layui-col-md8 layui-col-md-offset2 layui-bg-gray friend_info_list_div">
-                <div class="layui-col-md4 layui-col-md-offset4 friend_list_title">
-                    好友列表
-                </div>
-                <ul class="" id="friend_info_list_ul">
+            <div class="layui-col-md12 layui-bg-gray friend_info_list_div">
+                <div class="layui-col-md6">
+                    <span class="layui-col-md8 layui-col-md-offset2 friend_list_title">好友列表</span>
+                    <ul class="" id="friend_info_list_ul">
 
 
-                </ul>
-                <div>
-                    <button class="layui-btn layui-btn-normal add_friend layui-col-md4 layui-col-md-offset4">添加好友</button>
+                    </ul>
                 </div>
+
+                <div class="layui-col-md6 apply_div">
+                    <span class="layui-col-md8 layui-col-md-offset2 apply_title">申请列表</span>
+<!--                    <div class="layui-col-md12" id="apply_for_me">-->
+                        <span class="layui-col-md12 apply_for_me_title">请求添加我为好友</span>
+                        <ul class="layui-col-md12 apply_for_me" id="apply_for_me">
+
+                        </ul>
+<!--                    </div>-->
+                    <span class="layui-col-md12 my_apply_title" >我的申请</span>
+                    <ul class="layui-col-md12 my_apply" id="my_apply">
+
+                        </ul>
+                    <button class="layui-btn layui-btn-sm layui-btn-normal layui-col-md8 layui-col-md-offset2 add_friend" onclick="popApplyFriend()">添加好友</button>
+                </div>
+
+
             </div>
         </div>
     </div>
@@ -126,7 +146,10 @@
         // 列表信息
         getShareList( 'friend' );
         // getShareList( 'world' );
+        // 获取好友列表
         getFriendList();
+        // 获取申请列表
+        getApplyList();
     });
 
     function getFriendList() {
@@ -335,6 +358,143 @@
         });
     }
 
+
+
+    function popApplyFriend() {
+
+
+
+        // 添加好友
+        layui.use('layer', function () {
+            var layer = layui.layer;
+
+            layer.open({
+                title: '邮箱'
+                ,shadeClose: 1
+                ,content: $("#apply_window")
+                ,btn: ['申请']
+                ,yes:function () {
+                    let friend_email = $('#friend_email').val();
+                    doApply( friend_email );
+
+                }
+            });
+        });
+
+    }
+
+    function doApply( friend_email ) {
+
+        var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+        if( !reg.test( friend_email ) )
+        {
+            alert("邮箱格式不对");
+            return false;
+        }
+
+        let data = {};
+        data['token']           = token;
+        data['friend_email']    = friend_email;
+
+        $.post(basicURL + `/user/applyFriend`, data, function(data) {
+
+            if (typeof data === 'string') {
+                res = JSON.parse(data);
+            } else {
+                res = data
+            }
+            if (res.code == '10000') {
+                alert('申请成功');
+                layui.layer.closeAll();
+            } else {
+                alert(res.msg);
+            }
+        });
+
+    }
+
+    function getApplyList() {
+
+        $.get(basicURL + `/user/getOtherApplyList?token=${token}`, function(data) {
+
+            if (typeof data === 'string') {
+                res = JSON.parse(data);
+            } else {
+                res = data
+            }
+            let getData = res['data'] != null ? res['data'] : null;
+            if (getData != null) {
+
+                let list = getData['list'];
+                list.forEach((item)=>{
+                    $("#apply_for_me").append(
+
+                        '<li>' +
+                        '      <span class="layui-col-md5">' + item.nickname + '</span>' +
+                        '      <a class="layui-col-md3 layui-col-md-offset1" onclick="applyOpt( ' + `'${item.relation_key}'` + ',' + false + '  )">拒绝</a>' +
+                        '      <a class="layui-col-md3" onclick="applyOpt( ' + `'${item.relation_key}'` + ',' + false + '  )">通过</a>' +
+                        '</li>')
+
+                });
+            }
+
+        });
+
+        $.get(basicURL + `/user/getMyApplyList?token=${token}`, function(data) {
+
+            if (typeof data === 'string') {
+                res = JSON.parse(data);
+            } else {
+                res = data
+            }
+            let getData = res['data'] != null ? res['data'] : null;
+            if (getData != null) {
+
+                let list = getData['list'];
+                list.forEach((item)=>{
+                    if ( item.nickname === '' ){
+                        item.nickname = '未命名';
+                    }
+                    $("#my_apply").append(
+
+                        '<li>' +
+                        '      <span class="layui-col-md5">' + item.nickname + '</span>' +
+                        '      <span class="layui-col-md5">' + item.is_pass + '</span>' +
+                        '</li>')
+
+                });
+            }
+
+        });
+
+
+
+    }
+
+    function applyOpt( relation_key, is_pass ) {
+
+        let data = {};
+        data['token']           = token;
+        data['opt']             = is_pass ? 1 : 0;
+        data['relation_key']    = relation_key ;
+
+
+        $.post(basicURL + `/user/optFriendApply`, data, function(data) {
+
+            if (typeof data === 'string') {
+                res = JSON.parse(data);
+            } else {
+                res = data
+            }
+            if (res.code == '10000') {
+                alert('操作成功');
+                layui.layer.closeAll();
+            } else {
+                alert(res.msg);
+            }
+        });
+
+    }
 
 </script>
 
