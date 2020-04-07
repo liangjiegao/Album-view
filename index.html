@@ -128,8 +128,8 @@
     });
 
     let basicURL    = getBasicUrl();
-    let token       = getToken();
-    let page        = 0;
+    // let token       = getToken();
+    let page        = 1;
     let count       = 10;
 
 
@@ -167,7 +167,7 @@
                     var tagList     = item['tag_list'];
                     var tagListHtml = '';
                     if ( tagList != null  ){
-                        tagList.forEach((item) => {
+                        $.each(tagList, function(tagKet, item) {
                             tagListHtml += '<span class="layui-badge layui-bg-orange tag">' + item + '</span>';
                         });
                     }
