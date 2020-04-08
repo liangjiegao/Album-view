@@ -119,7 +119,7 @@
         $('#tag_tab').on('click', function(title) {
 
             $("#img_list_div").empty();
-            page = 0;
+            page = 1;
             getImgList( page, count, title.toElement.textContent );
 
         });
@@ -189,7 +189,7 @@
 
     function searchImg() {
         $("#img_list_div").empty();
-        page = 0;
+        page = 1;
         getImgList(page, count, '')
 
     }
