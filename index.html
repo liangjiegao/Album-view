@@ -13,7 +13,13 @@
             float: left;
             bottom: 0;
         }
-
+        .pop_img_div{
+            display: none;
+        }
+        .pop_img{
+            width: auto;
+            height: 480px;
+        }
     </style>
 
 </head>
@@ -35,6 +41,10 @@
 
         </div>
     </div>
+</div>
+
+<div class="pop_img_div" id="pop_img_div">
+    <img src="" class="pop_img" id="pop_img">
 </div>
 
 <body>
@@ -175,7 +185,7 @@
                     $("#img_list_div").append(
                         '<div class="layui-col-md4 img_div">' +
                         '   <div>' +
-                        '       <img src="'+ item['url']+'" alt="">' +
+                        '       <img src="'+ item['url']+'" alt="" onclick="popImg( ' + `'${item['url']}'` +')">' +
                                 tagListHtml +
                         '   </div>' +
                         '</div>'
@@ -202,7 +212,36 @@
 
     }
 
+    function popImg( url ) {
 
+        $('#pop_img').attr('src', url);
+
+        // 查看图片框
+        layui.use('layer', function () {
+            var layer = layui.layer;
+
+            layer.open({
+                icon: 5,
+                area: ['800px', '500px'],
+                type: 1,
+                title: '',
+                closeBtn: 1,
+                shade: 0.5,
+                shadeClose: 1,
+                anim: 5,
+                isOutAnim: true,
+                resize: false,
+                content: $('#pop_img_div'), //这里content是一个普通的String
+                end: function () {
+
+                    // $('#show_img').attr('src', '');
+                    $('#tag_div').empty();
+                }
+            });
+
+        });
+
+    }
 
 
     function sidebarOpt() {
