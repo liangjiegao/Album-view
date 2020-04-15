@@ -110,7 +110,7 @@
 <div class="layui-col-md12 top">
     <div class="layui-col-md4">
         <img class="preload-me wf-mobile-hidden"
-             src="https://ccdn.goodq.top/caches/85e9413af2fb7f593b2c9e26f027fb64/aHR0cHM6Ly81ZDZjYWM5NThlNzFmLnQ3NC5xaWZlaXllLmNvbS9xZnktY29udGVudC91cGxvYWRzLzIwMTkvMDgvNjY5ZTBhOWMxMjE0ODI4YTcwZWFiOWUyYjM5NTkyMDAtOTAud2VicA_p_p100_p_3D_p_p100_p_3D.webp"
+             src=""
              width="50" height="50" alt="">
 
     </div>
@@ -127,27 +127,30 @@
 </div>
 
     <div class="layui-container">
-        <div>
-            <div class="layui-col-md1">
-                <a onclick="back()">
-                    <img src="./resouce/left.png" class="back_img">
-                    <label>返回</label>
-                </a>
+
+        <div class="layui-col-md12">
+            <div>
+                <div class="layui-col-md1 back_div">
+                    <a onclick="back()">
+                        <img src="./resouce/left.png" class="back_img">
+                        <label>返回</label>
+                    </a>
+                </div>
+                <div class="layui-col-md1 forward_div ">
+                    <a onclick="forward()">
+                        <label>前进</label>
+                        <img src="./resouce/right.png" class="forward">
+                    </a>
+                </div>
             </div>
-            <div class="layui-col-md1 layui-col-md-offset1">
-                <a onclick="forward()">
-                    <label>前进</label>
-                    <img src="./resouce/right.png" class="forward">
-                </a>
+            <div class="layui-input-inline layui-col-md5 layui-col-md-offset1 search" >
+                <label>
+                    <input type="text" id="search_input" name="search" required="" lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+                </label>
             </div>
-        </div>
-        <div class="layui-input-inline layui-col-md12 search" >
-            <label>
-                <input type="text" id="search_input" name="search" required="" lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input">
-            </label>
-            <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" onclick="getUserImg(0 , true)">搜索</button>
-            <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" onclick="uploadImgWindow()">上传文件</button>
-            <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" onclick="createDirWindow()">添加文件夹</button>
+            <button type="button" class="layui-btn layui-btn-normal" onclick="getUserImg(0 , true)">搜索</button>
+            <button type="button" class="layui-btn layui-btn-normal" onclick="createDirWindow()">添加目录</button>
+            <button type="button" class="layui-btn layui-btn-normal" onclick="uploadImgWindow()">上传文件</button>
         </div>
         <div class="layui-col-md12 info_list" id="info_list">
 

@@ -57,6 +57,12 @@
     height: 1000px;
     margin-top: 50px
 }
+.my_friend{
+    height: 100%;
+}
+.apply{
+    height: 100%;
+}
 .friend_item{
     padding: 5px;
 }
@@ -75,7 +81,7 @@
 
 }
 .add_friend{
-
+    margin-top: 30px;
 }
 .apply_div{
 }
@@ -85,9 +91,14 @@
 }
 .my_apply_title{
     margin-top: 10px;
-    font-size: 13pt;
+    font-size: 11pt;
+}
+.my_apply li{
+
+    margin-left: 10px;
+
 }
 .apply_for_me_title{
     margin-top: 10px;
-    font-size: 13pt;
+    font-size: 11pt;
 }

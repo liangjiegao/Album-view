@@ -80,8 +80,8 @@
 
         </div>
         <div class="layui-col-md4">
-            <div class="layui-col-md12 layui-bg-gray friend_info_list_div">
-                <div class="layui-col-md6">
+            <div class="layui-col-md12 friend_info_list_div">
+                <div class="layui-col-md6 my_friend layui-bg-gray">
                     <span class="layui-col-md8 layui-col-md-offset2 friend_list_title">好友列表</span>
                     <ul class="" id="friend_info_list_ul">
 
@@ -89,19 +89,22 @@
                     </ul>
                 </div>
 
-                <div class="layui-col-md6 apply_div">
-                    <span class="layui-col-md8 layui-col-md-offset2 apply_title">申请列表</span>
+                <div class="layui-col-md6  layui-bg-gray apply_div apply">
+                        <span class="layui-col-md8 layui-col-md-offset2 apply_title">申请列表</span>
 <!--                    <div class="layui-col-md12" id="apply_for_me">-->
                         <span class="layui-col-md12 apply_for_me_title">请求添加我为好友</span>
+                        <hr/>
                         <ul class="layui-col-md12 apply_for_me" id="apply_for_me">
 
                         </ul>
 <!--                    </div>-->
                     <span class="layui-col-md12 my_apply_title" >我的申请</span>
-                    <ul class="layui-col-md12 my_apply" id="my_apply">
+                    <hr/>
+
+                    <ul class="layui-col-md12 my_apply my_apply" id="my_apply">
 
                         </ul>
-                    <button class="layui-btn layui-btn-sm layui-btn-normal layui-col-md8 layui-col-md-offset2 add_friend" onclick="popApplyFriend()">添加好友</button>
+                    <button class="layui-btn layui-btn-sm layui-btn-normal layui-col-md8 add_friend" onclick="popApplyFriend()">添加好友</button>
                 </div>
 
 
