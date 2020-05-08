@@ -1,3 +1,8 @@
+html{
+    background: radial-gradient(#A6ACB8, #54617D, #172952);
+    height: 100vh;
+}
+
 .login_text{
     font-size: x-large;
 }
@@ -6,12 +11,14 @@
 }
 .login_title{
     padding-top: 20px;
+    /* margin-top: 100px; */
 }
 .login_teb{
-    padding-top: 50px;
+    padding: 50px 40px 0;
+    
 }
 .login_btn{
-    padding-top: 80px;
+    padding-top: 20px;
 }
 .reg_btn{
     padding-top: 30px;
@@ -19,3 +26,7 @@
 /*.login{*/
 /*    display: none;*/
 /*}*/
+
+#login{
+    padding-top: 60px;
+}

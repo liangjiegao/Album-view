@@ -13,11 +13,14 @@
 <div class="login" id="login">
     <div class="layui-row">
 
-        <div class="layui-col-md4 layui-col-md-offset4 layui-bg-gray">
+        <div 
+            style="box-shadow: 0 2px 4px rgba(0, 0, 0, .52), 0 0 6px rgba(0, 0, 0, .04);padding-bottom:20px;" 
+            class="layui-col-md4 layui-col-md-offset4 layui-bg-gray">
 
             <!-- 标题 -->
             <!--            <div class="layui-col-md6 layui-col-md-offset3">-->
             <div class="layui-tab layui-tab-brief login_title" lay-filter="docDemoTabBrief">
+
                 <ul class="layui-tab-title layui-col-md6 layui-col-md-offset3">
                     <li class="layui-this">
                         <a class="login_text" >登录</a>
@@ -52,12 +55,12 @@
                                 </div>
                             </div>
                             <div class="layui-form-item login_btn ">
-                                <div class="layui-col-md6 layui-col-md-offset3">
-                                    <button type="button" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid" onclick="doLogin()">登录</button>
+                                <div class="layui-col-md12">
+                                    <button type="button" class="layui-btn layui-btn-normal layui-btn-fluid" onclick="doLogin()">登录</button>
                                 </div>
                             </div>
                             <div class="layui-form-item forget_password">
-                                <div class="layui-col-md6 layui-col-md-offset3">
+                                <div style="float:right">
                                     <a href="https://www.baidu.com">忘记密码？</a>
                                 </div>
                             </div>
@@ -119,8 +122,8 @@
                                 </div>
 
                                 <div class="layui-form-item reg_btn ">
-                                    <div class="layui-col-md6 layui-col-md-offset3">
-                                        <button type="button" class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid" onclick="doReg()">注册</button>
+                                    <div class="layui-col-md12">
+                                        <button type="button" class="layui-btn layui-btn-normal layui-btn-fluid" onclick="doReg()">注册</button>
                                     </div>
                                 </div>
 

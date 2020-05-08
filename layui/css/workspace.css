@@ -90,6 +90,9 @@
 }
 .select_show_div{
     height: 120px;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
 }
 .select_delete{
     position: absolute;
@@ -167,4 +170,15 @@
 }
 .info_list{
     margin-top: 30px;
+}
+
+#img_list{
+    /* float: left; */
+    display: flex;
+    flex-flow: row nowrap;
+}
+#img_list li>div{
+    width: 100%;
+    padding: 0;
+    padding-right: 10px;
 }
