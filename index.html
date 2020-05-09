@@ -155,7 +155,7 @@
     // let token       = getToken();
     let page        = 1;
     let count       = 10;
-
+    let tab_info    = '';
 
     $(document).ready(() => {
         // 图片列表
@@ -163,7 +163,8 @@
 
     });
 
-    function getImgList( page, count, tab_info ) {
+    function getImgList( page, count, tabInfo ) {
+        tab_info = tabInfo;
 
         let keyword     = $('#search_input').val();
         if ( tab_info === '全部' ){
@@ -200,7 +201,7 @@
                         '<div class="layui-col-md4 img_div">' +
                         '   <div>' +
                         '       <img src="'+ item['url']+'" alt="" onclick="popImg( ' + `'${item['url']}'` +')">' +
-                                '<div>' + tagListHtml + '</div>' + 
+                                '<div>' + tagListHtml + '</div>' +
                         '   </div>' +
                         '</div>'
                     );
@@ -214,7 +215,7 @@
     function searchImg() {
         $("#img_list_div").empty();
         page = 1;
-        getImgList(page, count, '')
+        getImgList(page, count, tab_info)
 
     }
 
@@ -222,7 +223,7 @@
 
         page += 1;
 
-        getImgList(page, count, '')
+        getImgList(page, count, tab_info)
 
     }
 
