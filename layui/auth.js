@@ -78,6 +78,7 @@ ws.onclose = function(event){
 var int=self.setInterval("clock()",5000);
 function clock()
 {
-  ws.send("ping"); //客户端给服务端推送消息
+  // ws.send("ping"); //客户端给服务端推送消息
+  console.log("ping")
   ws.onmessage
 }
