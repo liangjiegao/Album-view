@@ -37,25 +37,24 @@
 
         <div class="layui-col-md12 select_show_div">
 
-            <div class='layui-col-md1 left'>
-                <img src="./resouce/left.png">
-            </div>
             <ul class="img_list" id="img_list">
 
             </ul>
 
-            <div class='layui-col-md1 right'>
-                <img src="./resouce/right.png">
-            </div>
         </div>
 
-        <div class="layui-col-md10 add_div layui-col-md-offset2">
-            <input type="file"  class=" layui-btn-xs upload_img file_select" id="upload_img" style="opacity: 0" accept="image/*" multiple>
-            <i class="layui-icon">&#xe67c;添加文件</i>
-        </div>
+
 
         <div class="layui-col-md12 submit_div">
-            <button class="layui-col-md4 layui-col-md-offset4 layui-btn layui-btn-radius layui-btn-normal" onclick="upload()">确认</button>
+            <div class="layui-col-md4 layui-col-md-offset2 add_div">
+                <input type="file"  class=" layui-btn-xs upload_img file_select" id="upload_img" style="opacity: 0" accept="image/*" multiple>
+                <i class="layui-icon">&#xe67c;添加文件</i>
+<!--                <button type="button" class=" layui-btn-xs upload_img file_select" id="upload_img" style="opacity: 0" accept="image/*" multiple>-->
+<!--                    <i class="layui-icon">&#xe67c;添加文件</i>-->
+<!--                </button>-->
+            </div>
+
+            <button class="layui-col-md4 layui-btn layui-btn-radius layui-btn-normal" onclick="upload()">确认</button>
         </div>
     </div>
 </div>
@@ -81,8 +80,10 @@
         </div>
     </div>
     <div class="layui-col-md4">
+
         <textarea id="vod_content" class="vod_content" name="" type="text/plain" placeholder="写下你的心情（限制800字）"
                   rows="20" cols="35" maxlength="800"></textarea>
+
         <div class="layui-col-md10 share_type_div" >
             <label for="share_type">能看到的小可爱有：</label>
             <select name="share_type" id="share_type" >
