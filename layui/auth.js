@@ -69,6 +69,13 @@ ws.onopen = function(event){
 
 ws.onmessage= function(event){
   console.log("message："+event.data);
+
+  layui.use('layer', function(){
+    var layer = layui.layer;
+
+    layer.msg('图片已经全部解析完成');
+  });
+
   // ws.send("15521166666"); //客户端给服务端推送消息
 };
 
@@ -78,7 +85,7 @@ ws.onclose = function(event){
 var int=self.setInterval("clock()",5000);
 function clock()
 {
-  // ws.send("ping"); //客户端给服务端推送消息
+  ws.send("ping"); //客户端给服务端推送消息
   console.log("ping")
   ws.onmessage
 }
