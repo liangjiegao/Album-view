@@ -59,7 +59,7 @@ function checkLogin( code ) {
 
 }
 
-var ws = new WebSocket("ws://120.27.210.67/wss");
+var ws = new WebSocket("ws://120.27.210.67:9200");
 ws.onopen = function(event){
   console.log("open!");
   let token = getTokenInLocal();
